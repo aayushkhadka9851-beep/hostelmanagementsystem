@@ -1,0 +1,8 @@
+{
+  "name": "Hostel Management System",
+  "description": "A comprehensive digital management platform for hostel operations including student registration, room allocation, payment tracking, dashboard reporting, and system settings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,196 @@
+/* Custom CSS variables matching required design coordinates */
+:root {
+  --primary-color: #2563eb;
+  --sidebar-bg: #1e293b;
+  --sidebar-active: #334155;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-hover: #f1f5f9;
+  --app-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #334155;
+  --border-color: #e2e8f0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  background-color: var(--app-bg);
+  overflow-x: hidden;
+}
+
+/* Typography styles matching Font Selection Strategy */
+h1, h2, h3, h4, h5, h6, .font-sans {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+/* Custom Navigation Button Styling in Sidebar */
+.nav-link-custom {
+  color: var(--sidebar-text);
+  font-weight: 500;
+  font-size: 0.825rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  outline: none !important;
+}
+
+.nav-link-custom:hover {
+  color: var(--sidebar-text-hover);
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  transform: translateX(3px);
+}
+
+.nav-link-custom.active {
+  color: #ffffff !important;
+  background-color: var(--primary-color) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Transition classes */
+.transition-all {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Rounded start/end classes */
+.rounded-3-start {
+  border-top-left-radius: 0.5rem !important;
+  border-bottom-left-radius: 0.5rem !important;
+}
+.rounded-3-end {
+  border-top-right-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+}
+
+/* Timeline Custom Styles for Activities Panel */
+.timeline-item {
+  position: relative;
+  padding-left: 24px;
+}
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  bottom: -20px;
+  width: 2px;
+  background-color: var(--border-color);
+}
+.timeline-item:last-child::before {
+  display: none;
+}
+.timeline-badge {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--border-color);
+}
+
+/* Specific Badge Designs */
+.fs-7.5 { font-size: 0.85rem !important; }
+.fs-8 { font-size: 0.775rem !important; }
+.fs-8.5 { font-size: 0.8rem !important; }
+.fs-9 { font-size: 0.7rem !important; font-weight: 600; }
+.fs-9.5 { font-size: 0.725rem !important; font-weight: 600; }
+.mb-0.5 { margin-bottom: 0.125rem !important; }
+.mb-1.5 { margin-bottom: 0.375rem !important; }
+.mb-2.5 { margin-bottom: 0.625rem !important; }
+.mb-3.5 { margin-bottom: 0.875rem !important; }
+.gap-1.5 { gap: 0.375rem !important; }
+
+/* Custom Badge Themes */
+.badge-paid {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.725rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+}
+.badge-pending {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  font-weight: 600;
+  font-size: 0.725rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+}
+.badge-active {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 0.725rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+}
+.badge-inactive {
+  background-color: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.725rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+}
+.badge-maintenance {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.725rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+}
+
+/* Animations */
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+.pulse-indicator {
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Styling custom search forms and inputs matching dashboard guidelines */
+.form-control:focus, .form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.18rem rgba(37, 99, 235, 0.15);
+}
+
+.table th {
+  font-weight: 600;
+  border-bottom-width: 1px !important;
+}
+
+/* Hide navigation/screens comfortably */
+.screen-view {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom Scrollbar for Sleek Dashboards */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 50rem;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

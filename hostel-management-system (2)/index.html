@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostel Management System - Admin Panel</title>
+    
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styling stylesheet -->
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body class="bg-[#f8fafc]">
+    
+    <!-- 1. LOGIN SCREEN CONTAINER -->
+    <div id="login-container" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5 d-none">
+      <div id="login-card" class="card shadow-lg border-0 rounded-4 overflow-hidden w-100" style="max-width: 480px;">
+        <div class="p-5 bg-[#1e293b] text-white text-center position-relative">
+          <div class="mb-3 d-inline-flex p-3 rounded-circle bg-blue-600 text-white shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hotel"><path d="M10 22v-6.57c0-.42.17-.82.48-1.12l3.04-3.04c.3-.3.7-.47 1.12-.47h.1c.88 0 1.6.72 1.6 1.6V22"/><path d="M10 10V5c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v17H10"/><path d="M14 6h1"/><path d="M14 10h1"/><path d="M18 6h1"/><path d="M18 10h1"/><path d="M18 14h1"/><path d="M22 22H2"/><path d="M12 22V14M12 10a2 2 0 0 1-2-2V7H2v15h8"/></svg>
+          </div>
+          <h2 class="font-sans fw-bold mb-1 tracking-tight">Hostel Royal Oak</h2>
+          <p class="text-slate-300 fs-7 mb-0">Unified Operations &amp; Management Portal</p>
+        </div>
+        <div class="card-body p-5 bg-white">
+          <div id="auth-error" class="alert alert-danger d-none border-0 fs-7 py-2.5 rounded-3" role="alert">
+            Invalid credentials. Please verify your entries.
+          </div>
+          
+          <form id="login-form">
+            <div class="mb-3.5">
+              <label for="login-username" class="form-label text-slate-600 fw-medium fs-7.5">Administrator Username</label>
+              <input type="text" class="form-control rounded-3" id="login-username" placeholder="Enter username" required value="admin">
+            </div>
+            <div class="mb-4">
+              <label for="login-password" class="form-label text-slate-600 fw-medium fs-7.5">Security Password</label>
+              <input type="password" class="form-control rounded-3" id="login-password" placeholder="••••••••" required value="admin123">
+            </div>
+            <button type="submit" id="btn-login" class="btn btn-primary bg-[#2563eb] border-0 w-100 py-2.5 fw-medium rounded-3">
+              Secure Sign In
+            </button>
+          </form>
+          
+          <div class="mt-4 pt-3 border-top text-center text-slate-500 fs-8">
+            <p class="mb-1 fw-medium uppercase tracking-wider text-slate-400">Default Sandbox Credentials</p>
+            <p class="mb-0 font-mono">ID: <span class="text-slate-800 fw-bold">admin</span> / Password: <span class="text-slate-800 fw-bold">admin123</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MAIN APPLICATION PANEL FRAME -->
+    <div id="app-container" class="d-flex min-vh-100 d-none">
+      
+      <!-- SIDEBAR COMPONENT -->
+      <aside id="sidebar-panel" class="bg-[#1e293b] text-slate-300 d-flex flex-column transition-all" style="width: 250px; min-width: 250px;">
+        <div class="p-4 border-bottom border-slate-700 d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M12 22V14M12 10a2 2 0 0 1-2-2V7H2v15h8"/><path d="M10 22v-6.57c0-.42.17-.82.48-1.12l3.04-3.04c.3-.3.7-.47 1.12-.47h.1c.88 0 1.6.72 1.6 1.6V22"/><path d="M10 10V5c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v17H10"/></svg>
+            <span class="font-sans fw-bold text-white fs-5 tracking-tight">Royal Oak</span>
+          </div>
+          <span class="badge bg-blue-600/10 text-[#2563eb] text-uppercase fs-9.5 font-mono px-2 py-1">Admin</span>
+        </div>
+        
+        <!-- Sidebar Navigation Buttons -->
+        <nav class="flex-grow-1 p-3 d-flex flex-column gap-1.5" id="sidebar-nav">
+          <button data-target="dashboard" class="nav-link-custom active d-flex align-items-center px-3 py-2.5 rounded-3 border-0 bg-transparent text-start w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-3"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="14" rx="1"/></svg>
+            Dashboard
+          </button>
+          <button data-target="students" class="nav-link-custom d-flex align-items-center px-3 py-2.5 rounded-3 border-0 bg-transparent text-start w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-3"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Students
+          </button>
+          <button data-target="rooms" class="nav-link-custom d-flex align-items-center px-3 py-2.5 rounded-3 border-0 bg-transparent text-start w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-3"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Rooms
+          </button>
+          <button data-target="payments" class="nav-link-custom d-flex align-items-center px-3 py-2.5 rounded-3 border-0 bg-transparent text-start w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-3"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Payments
+          </button>
+          <button data-target="settings" class="nav-link-custom d-flex align-items-center px-3 py-2.5 rounded-3 border-0 bg-transparent text-start w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-3"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            Settings
+          </button>
+        </nav>
+
+        <!-- Sidebar Footer Action -->
+        <div class="p-3 border-top border-slate-700">
+          <div class="d-flex align-items-center mb-3">
+            <div class="avatar bg-[#2563eb] text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; font-weight: 600;">
+              A
+            </div>
+            <div>
+              <span class="d-block fw-semibold text-white fs-7.5">Hostel Admin</span>
+              <span class="d-block text-slate-500 fs-8">System Operator</span>
+            </div>
+          </div>
+          <button id="btn-logout" class="btn btn-outline-danger border-0 d-flex align-items-center w-100 font-sans fw-medium fs-7.5 py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            Secure Sign-Out
+          </button>
+        </div>
+      </aside>
+
+      <!-- CONTENT CANVAS VIEW FRAME -->
+      <main class="flex-grow-1 d-flex flex-column overflow-auto">
+        
+        <!-- Header Component -->
+        <header id="header-bar" class="bg-white d-flex align-items-center justify-content-between px-4 py-3 border-bottom shadow-sm">
+          <div>
+            <h4 class="font-sans fw-bold mb-0 text-slate-800 tracking-tight" id="header-title">Dashboard View</h4>
+          </div>
+          <div class="d-flex align-items-center gap-4">
+            <div class="d-flex align-items-center fs-8 font-mono bg-slate-100 text-slate-600 px-3 py-1.5 rounded-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Time: <span id="clock-display" class="fw-bold text-slate-800 ms-1">UTC 11:15</span>
+            </div>
+            
+            <div id="school-info-pill" class="fs-7.5 fw-medium text-slate-700 bg-blue-100/30 border border-blue-200/50 px-3.5 py-1.5 rounded-full select-none cursor-default d-flex align-items-center">
+              <span class="pulse-indicator bg-blue-600 me-2 rounded-circle" style="width: 7px; height: 7px;"></span>
+              <span id="active-hostel-pill-name">Royal Oak Student Living</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Inner Content Area -->
+        <div class="p-4" id="view-canvas">
+
+          <!-- ------------------ DASHBOARD VIEW ------------------ -->
+          <div id="view-dashboard" class="d-flex flex-column gap-4 screen-view">
+            <!-- Stats row -->
+            <div class="row g-3">
+              <!-- Grid item 1 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border-primary">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Total Students</span>
+                      <div class="p-2 rounded bg-blue-50 text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-slate-800 mb-0 font-mono" id="stat-students">0</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- Grid item 2 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border border-teal-500">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Total Rooms</span>
+                      <div class="p-2 rounded bg-teal-50 text-teal-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-slate-800 mb-0 font-mono" id="stat-rooms">0</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- Grid item 3 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border border-indigo-500">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Occupied Rooms</span>
+                      <div class="p-2 rounded bg-indigo-50 text-indigo-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 19.1 14.2-14.2"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-slate-800 mb-0 font-mono" id="stat-occupied-rooms">0</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- Grid item 4 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border border-amber-500">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Available Rooms</span>
+                      <div class="p-2 rounded bg-amber-50 text-amber-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-slate-800 mb-0 font-mono" id="stat-available-rooms">0</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- Grid item 5 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border border-rose-500">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Pending Bills</span>
+                      <div class="p-2 rounded bg-rose-50 text-rose-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-rose-600 mb-0 font-mono" id="stat-pending">0</h3>
+                  </div>
+                </div>
+              </div>
+              <!-- Grid item 6 -->
+              <div class="col-md-4 col-lg-2">
+                <div class="card h-100 shadow-sm border-0 bg-white rounded-3 overflow-hidden border-start border-4 border border-emerald-500">
+                  <div class="card-body p-3.5">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="text-slate-500 fs-8 fw-semibold uppercase tracking-wider">Revenue</span>
+                      <div class="p-2 rounded bg-emerald-50 text-emerald-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                      </div>
+                    </div>
+                    <h3 class="font-sans fw-bold text-slate-800 mb-0 font-mono" id="stat-revenue">$0</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Statistics Analysis Grid -->
+            <div class="row g-4">
+              <!-- Occupancy analytics -->
+              <div class="col-xl-7">
+                <div class="card border-0 shadow-sm rounded-3 bg-white h-100">
+                  <div class="card-header bg-transparent border-0 px-4 py-3.5 d-flex align-items-center justify-content-between">
+                    <div>
+                      <h5 class="fw-bold font-sans text-slate-800 mb-0.5">Room &amp; Bed Occupancy Audit</h5>
+                      <p class="text-slate-400 fs-8 mb-0">Analysis of rooms with allocations, remaining capacities, and operations status.</p>
+                    </div>
+                  </div>
+                  <div class="card-body px-4 pb-4 pt-0">
+                    <div class="table-responsive">
+                      <table class="table table-hover align-middle border-slate-100 fs-7.5" id="dashboard-occupancy-table">
+                        <thead class="bg-slate-50 text-slate-500 text-uppercase tracking-wider fs-9">
+                          <tr>
+                            <th>Room No</th>
+                            <th>Allocation Scale</th>
+                            <th>Status Flag</th>
+                            <th>Occupancy Load</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- Dynamic render -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- General stats percentage & Recent Logs -->
+              <div class="col-xl-5 d-flex flex-column gap-4">
+                
+                <!-- Performance card: Bed space percentage -->
+                <div class="card border-0 shadow-sm rounded-3 bg-white">
+                  <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3.5">
+                      <div>
+                        <h6 class="fw-bold font-sans text-slate-800 mb-0.5">Bed Capacity Ratio</h6>
+                        <span class="text-slate-400 fs-8">Proportion of occupied system beds</span>
+                      </div>
+                      <span class="badge bg-blue-100 text-blue-700 fs-8.5 font-mono" id="cap-beds-pct">0%</span>
+                    </div>
+                    <div class="progress rounded-pill bg-slate-100 mb-3" style="height: 10px;">
+                      <div id="dashboard-progress-beds" class="progress-bar rounded-pill bg-[#2563eb]" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between fs-8 text-slate-500 font-mono">
+                      <span>Occupied: <b id="cap-occupied-beds" class="text-slate-800">0</b></span>
+                      <span>Total Available Capacity: <b id="cap-total-beds" class="text-slate-800">0</b></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recent operations log -->
+                <div class="card border-0 shadow-sm rounded-3 bg-white flex-grow-1">
+                  <div class="card-header bg-transparent border-0 px-4 py-3.5 border-bottom border-slate-100">
+                    <h6 class="fw-bold font-sans text-slate-800 mb-0">System Activity Registry</h6>
+                  </div>
+                  <div class="card-body p-4 pt-3 overflow-auto" style="max-height: 250px;">
+                    <div class="timeline-container d-flex flex-column gap-3.5" id="activity-timeline">
+                      <!-- Loaded via api dynamically -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ------------------ STUDENTS VIEW ------------------ -->
+          <div id="view-students" class="d-flex flex-column gap-4 screen-view d-none">
+            <div class="card border-0 shadow-sm bg-white rounded-3">
+              <div class="card-body p-4">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+                  
+                  <!-- Filter Search -->
+                  <div class="position-relative w-100" style="max-width: 400px;">
+                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-slate-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </span>
+                    <input type="text" id="search-student" class="form-control rounded-3 ps-5 border-slate-200 fs-7.5" placeholder="Search student by name, email, or room...">
+                  </div>
+
+                  <!-- CTA button -->
+                  <button class="btn btn-primary bg-[#2563eb] border-0 px-4 py-2 fw-medium rounded-3 d-flex align-items-center fs-7.5" data-bs-toggle="modal" data-bs-target="#modal-add-student">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    Register Student
+                  </button>
+                </div>
+
+                <!-- Student Table container -->
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle border-slate-100 fs-7.5" id="students-table">
+                    <thead class="bg-slate-50 text-slate-500 text-uppercase tracking-wider fs-9">
+                      <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Contact / Email</th>
+                        <th>Assigned Room</th>
+                        <th>Admission Date</th>
+                        <th>Status Flag</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- dynamically filled -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ------------------ ROOMS VIEW ------------------ -->
+          <div id="view-rooms" class="d-flex flex-column gap-4 screen-view d-none">
+            <div class="card border-0 shadow-sm bg-white rounded-3">
+              <div class="card-body p-4">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+                  
+                  <!-- Room Search bar -->
+                  <div class="position-relative w-100" style="max-width: 400px;">
+                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-slate-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </span>
+                    <input type="text" id="search-room" class="form-control rounded-3 ps-5 border-slate-200 fs-7.5" placeholder="Search rooms by number, type, status...">
+                  </div>
+
+                  <!-- CTA button -->
+                  <button class="btn btn-primary bg-[#2563eb] border-0 px-4 py-2 fw-medium rounded-3 d-flex align-items-center fs-7.5" data-bs-toggle="modal" data-bs-target="#modal-add-room">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    Add Room Unit
+                  </button>
+                </div>
+
+                <!-- Rooms Table -->
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle border-slate-100 fs-7.5" id="rooms-table">
+                    <thead class="bg-slate-50 text-slate-500 text-uppercase tracking-wider fs-9">
+                      <tr>
+                        <th>ID</th>
+                        <th>Room Number</th>
+                        <th>Room Category</th>
+                        <th>Maximum Capacity</th>
+                        <th>Monthly Rent</th>
+                        <th>Occupancy Level</th>
+                        <th>Status Badge</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- filled dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ------------------ PAYMENTS VIEW ------------------ -->
+          <div id="view-payments" class="d-flex flex-column gap-4 screen-view d-none">
+            <div class="card border-0 shadow-sm bg-white rounded-3">
+              <div class="card-body p-4">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+                  
+                  <!-- Payment filter search -->
+                  <div class="position-relative w-100" style="max-width: 400px;">
+                    <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-slate-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </span>
+                    <input type="text" id="search-payment" class="form-control rounded-3 ps-5 border-slate-200 fs-7.5" placeholder="Search transactions by student, status...">
+                  </div>
+
+                  <!-- CTA -->
+                  <button class="btn btn-primary bg-[#2563eb] border-0 px-4 py-2 fw-medium rounded-3 d-flex align-items-center fs-7.5" data-bs-toggle="modal" data-bs-target="#modal-add-payment">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-receipt-text"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M14 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/></svg></svg>
+                    Record Payment
+                  </button>
+                </div>
+
+                <!-- Payments Table -->
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle border-slate-100 fs-7.5" id="payments-table">
+                    <thead class="bg-slate-50 text-slate-500 text-uppercase tracking-wider fs-9">
+                      <tr>
+                        <th>Transaction ID</th>
+                        <th>Student Name</th>
+                        <th>Assigned Room</th>
+                        <th>Billed Amount</th>
+                        <th>Payment Date</th>
+                        <th>Status Flag</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- dynamic content -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ------------------ SETTINGS VIEW ------------------ -->
+          <div id="view-settings" class="screen-view d-none">
+            <div class="row g-4">
+              <!-- Grid item Left: Hostel details form -->
+              <div class="col-lg-6">
+                <div class="card border-0 shadow-sm bg-white rounded-3 h-100">
+                  <div class="card-header bg-transparent border-0 px-4 py-3.5 border-bottom border-slate-100">
+                    <h6 class="fw-bold font-sans text-slate-800 mb-0">Hostel Profile Settings</h6>
+                  </div>
+                  <div class="card-body p-4">
+                    <form id="hostel-info-form">
+                      <div class="mb-3">
+                        <label for="set-hostel-name" class="form-label text-slate-600 fw-medium fs-7.5">Hostel Brand Name</label>
+                        <input type="text" class="form-control rounded-3" id="set-hostel-name" required>
+                      </div>
+                      <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                          <label for="set-hostel-date" class="form-label text-slate-600 fw-medium fs-7.5">Established Date</label>
+                          <input type="date" class="form-control rounded-3" id="set-hostel-date" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="set-hostel-contact" class="form-label text-slate-600 fw-medium fs-7.5">Official Line</label>
+                          <input type="text" class="form-control rounded-3" id="set-hostel-contact" required>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="set-hostel-email" class="form-label text-slate-600 fw-medium fs-7.5">Administrative Email Address</label>
+                        <input type="email" class="form-control rounded-3" id="set-hostel-email" required>
+                      </div>
+                      <div class="mb-4">
+                        <label for="set-hostel-address" class="form-label text-slate-600 fw-medium fs-7.5">Physical Address Location</label>
+                        <textarea class="form-control rounded-3 text-slate-700" id="set-hostel-address" rows="3" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 px-4 py-2 fw-medium rounded-3 fs-7.5">
+                        Save General Info
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Grid item Right: Room type manager -->
+              <div class="col-lg-6">
+                <div class="card border-0 shadow-sm bg-white rounded-3 h-100">
+                  <div class="card-header bg-transparent border-0 px-4 py-3.5 border-bottom border-slate-100">
+                    <h6 class="fw-bold font-sans text-slate-800 mb-0">Room Sub-Types Management</h6>
+                  </div>
+                  <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    <div>
+                      <form id="add-room-type-form" class="mb-4">
+                        <label for="new-room-type-name" class="form-label text-slate-600 fw-medium fs-7.5">Add New Room Sub-Type</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control rounded-3-start fs-7.5" id="new-room-type-name" placeholder="e.g. Quadruple AC Attached" required>
+                          <button class="btn btn-primary bg-[#2563eb] border-0 px-3 fs-7.5 py-2" type="submit">
+                            Save Designation
+                          </button>
+                        </div>
+                        <div class="form-text fs-8 text-slate-400">Classify structural patterns to define room configuration templates.</div>
+                      </form>
+
+                      <p class="text-slate-600 fw-medium fs-7.5 mb-2">Configured Room Classifications</p>
+                    </div>
+                    
+                    <div class="flex-grow-1 overflow-auto border rounded-3 p-3 bg-slate-50 mb-3" style="max-height: 200px;">
+                      <ul class="list-group list-group-flush" id="room-types-list">
+                        <!-- Dynamic list rendering -->
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- /p-4 -->
+      </main> <!-- /flex-grow-1 -->
+    </div> <!-- /app-container -->
+
+    <!-- ==================== SYSTEM APPLICATION MODALS ==================== -->
+
+    <!-- Modal: Register Student -->
+    <div class="modal fade" id="modal-add-student" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Register New Hostel Admitted Student</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-add-student">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="add-student-name" class="form-label text-slate-600 fw-medium fs-7.5">Full Legal Name</label>
+                  <input type="text" class="form-control rounded-3" id="add-student-name" placeholder="Johnathan Doe" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-student-email" class="form-label text-slate-600 fw-medium fs-7.5">Personal Email Connection</label>
+                  <input type="email" class="form-control rounded-3" id="add-student-email" placeholder="john.doe@example.com" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-student-contact" class="form-label text-slate-600 fw-medium fs-7.5">Primary Cell Contact</label>
+                  <input type="text" class="form-control rounded-3" id="add-student-contact" placeholder="+1-555-0155" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-student-emergency" class="form-label text-slate-600 fw-medium fs-7.5">Emergency Contact Line</label>
+                  <input type="text" class="form-control rounded-3" id="add-student-emergency" placeholder="Emergency Relative Contact" required>
+                </div>
+                <div class="col-md-12">
+                  <label for="add-student-address" class="form-label text-slate-600 fw-medium fs-7.5">Permanent Home Address</label>
+                  <input type="text" class="form-control rounded-3" id="add-student-address" placeholder="123 Main St, Apartment 4B" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="add-student-room" class="form-label text-slate-600 fw-medium fs-7.5">Structure Room Assignment</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-student-room" required>
+                    <option value="" disabled selected>Select Room Unit</option>
+                    <!-- filled dynamically -->
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="add-student-date" class="form-label text-slate-600 fw-medium fs-7.5">Allocation Admission Date</label>
+                  <input type="date" class="form-control rounded-3 text-slate-600" id="add-student-date" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="add-student-status" class="form-label text-slate-600 fw-medium fs-7.5">Institutional status</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-student-status" required>
+                    <option value="Active">Active Student</option>
+                    <option value="Inactive">Inactive Student</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Save Record</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Edit Student Records -->
+    <div class="modal fade" id="modal-edit-student" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Update Admitted Student Profiles</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-student">
+            <input type="hidden" id="edit-student-id">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="edit-student-name" class="form-label text-slate-600 fw-medium fs-7.5">Full Legal Name</label>
+                  <input type="text" class="form-control rounded-3" id="edit-student-name" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-student-email" class="form-label text-slate-600 fw-medium fs-7.5">Personal Email Connection</label>
+                  <input type="email" class="form-control rounded-3" id="edit-student-email" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-student-contact" class="form-label text-slate-600 fw-medium fs-7.5">Primary Cell Contact</label>
+                  <input type="text" class="form-control rounded-3" id="edit-student-contact" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-student-emergency" class="form-label text-slate-600 fw-medium fs-7.5">Emergency Contact Line</label>
+                  <input type="text" class="form-control rounded-3" id="edit-student-emergency" required>
+                </div>
+                <div class="col-md-12">
+                  <label for="edit-student-address" class="form-label text-slate-600 fw-medium fs-7.5">Permanent Home Address</label>
+                  <input type="text" class="form-control rounded-3" id="edit-student-address" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="edit-student-room" class="form-label text-slate-600 fw-medium fs-7.5">Room Assignment</label>
+                  <select class="form-select rounded-3 text-slate-700" id="edit-student-room" required>
+                    <!-- filled dynamically -->
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="edit-student-date" class="form-label text-slate-600 fw-medium fs-7.5">Admission Date</label>
+                  <input type="date" class="form-control rounded-3" id="edit-student-date" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="edit-student-status" class="form-label text-slate-600 fw-medium fs-7.5">Institutional status</label>
+                  <select class="form-select rounded-3 text-slate-700" id="edit-student-status" required>
+                    <option value="Active">Active Student</option>
+                    <option value="Inactive">Inactive Student</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Update Profile Record</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: View Student details -->
+    <div class="modal fade" id="modal-view-student" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Institutional Student Registry profile</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="text-center mb-4">
+              <div class="avatar bg-blue-600 text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: 600;" id="view-student-avatar">
+                -
+              </div>
+              <h5 class="fw-bold font-sans text-slate-800 mb-1" id="view-student-name">-</h5>
+              <span class="badge" id="view-student-badge">Active</span>
+            </div>
+            
+            <div class="border rounded-3 overflow-hidden bg-slate-50 fs-7.5">
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Student ID:</div>
+                <div class="col-8 fw-semibold text-slate-800 font-mono text-end" id="view-student-id">-</div>
+              </div>
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Email Address:</div>
+                <div class="col-8 text-slate-800 text-end" id="view-student-email">-</div>
+              </div>
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Primary Contact:</div>
+                <div class="col-8 text-slate-800 text-end font-mono" id="view-student-contact">-</div>
+              </div>
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Emergency Line:</div>
+                <div class="col-8 text-slate-800 text-end font-mono" id="view-student-emergency">-</div>
+              </div>
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Home Address:</div>
+                <div class="col-8 text-slate-700 text-end" id="view-student-address">-</div>
+              </div>
+              <div class="row g-0 p-3 border-bottom bg-white">
+                <div class="col-4 text-slate-500">Assigned Unit:</div>
+                <div class="col-8 fw-semibold text-blue-600 text-end" id="view-student-room">-</div>
+              </div>
+              <div class="row g-0 p-3 bg-white">
+                <div class="col-4 text-slate-500">Admission Date:</div>
+                <div class="col-8 text-slate-800 text-end font-mono" id="view-student-date">-</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+            <button type="button" class="btn btn-secondary fs-7.5 px-4 py-2" data-bs-dismiss="modal">Close Profile</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Register Room Unit -->
+    <div class="modal fade" id="modal-add-room" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Configure New Room Unit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-add-room">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="add-room-number" class="form-label text-slate-600 fw-medium fs-7.5">Room Number Label</label>
+                  <input type="text" class="form-control rounded-3 font-mono" id="add-room-number" placeholder="e.g. 106" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-room-type" class="form-label text-slate-600 fw-medium fs-7.5">Category Class Type</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-room-type" required>
+                    <!-- filled dynamically -->
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-room-capacity" class="form-label text-slate-600 fw-medium fs-7.5">Maximum Capacity Beds</label>
+                  <input type="number" class="form-control rounded-3" id="add-room-capacity" min="1" max="10" placeholder="e.g. 2" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-room-rent" class="form-label text-slate-600 fw-medium fs-7.5">Monthly Rent ($)</label>
+                  <input type="number" class="form-control rounded-3" id="add-room-rent" min="0" step="5" placeholder="e.g. 400" required>
+                </div>
+                <div class="col-12">
+                  <label for="add-room-status" class="form-label text-slate-600 fw-medium fs-7.5">Availability status</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-room-status" required>
+                    <option value="Available">Available for Student Allocation</option>
+                    <option value="Maintenance">Maintenance Blocked</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Register Room</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Edit Room profiles -->
+    <div class="modal fade" id="modal-edit-room" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Update Room Specifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-room">
+            <input type="hidden" id="edit-room-id">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="edit-room-number" class="form-label text-slate-600 fw-medium fs-7.5">Room Number Label</label>
+                  <input type="text" class="form-control rounded-3 font-mono" id="edit-room-number" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-room-type" class="form-label text-slate-600 fw-medium fs-7.5">Category Class Type</label>
+                  <select class="form-select rounded-3 text-slate-700" id="edit-room-type" required>
+                    <!-- filled dynamically -->
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-room-capacity" class="form-label text-slate-600 fw-medium fs-7.5">Maximum Capacity Beds</label>
+                  <input type="number" class="form-control rounded-3" id="edit-room-capacity" min="1" max="10" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-room-rent" class="form-label text-slate-600 fw-medium fs-7.5">Monthly Rent ($)</label>
+                  <input type="number" class="form-control rounded-3" id="edit-room-rent" min="0" step="5" required>
+                </div>
+                <div class="col-12">
+                  <label for="edit-room-status" class="form-label text-slate-600 fw-medium fs-7.5">Availability status</label>
+                  <select class="form-select rounded-3" id="edit-room-status" required>
+                    <option value="Available">Available</option>
+                    <option value="Full">Full</option>
+                    <option value="Maintenance">Maintenance</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Update Room configurations</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Record Student Payment -->
+    <div class="modal fade" id="modal-add-payment" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Record New Payment Transaction</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-add-payment">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="add-payment-student" class="form-label text-slate-600 fw-medium fs-7.5 font-sans-medium">Target Hosteller Student</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-payment-student" required>
+                    <option value="" disabled selected>Select Active Student</option>
+                    <!-- dinamic options -->
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-payment-amount" class="form-label text-slate-600 fw-medium fs-7.5">Payment Amount Price ($)</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white bg-slate-50 border-slate-200 text-slate-500 fs-7.5">$</span>
+                    <input type="number" class="form-control rounded-3-end fs-7.5" id="add-payment-amount" min="1" placeholder="350" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="add-payment-date" class="form-label text-slate-600 fw-medium fs-7.5">Payment Date</label>
+                  <input type="date" class="form-control rounded-3" id="add-payment-date" required>
+                </div>
+                <div class="col-12">
+                  <label for="add-payment-status" class="form-label text-slate-600 fw-medium fs-7.5">Payment Status</label>
+                  <select class="form-select rounded-3 text-slate-700" id="add-payment-status" required>
+                    <option value="Paid">Paid (Clears Bills)</option>
+                    <option value="Pending">Pending (Billed Invoice)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Record Transaction</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Edit Payment records -->
+    <div class="modal fade" id="modal-edit-payment" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-header bg-slate-50 border-bottom px-4 py-3">
+            <h5 class="modal-title fw-bold font-sans text-slate-800 fs-6">Revise Payment Statement Records</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="form-edit-payment">
+            <input type="hidden" id="edit-payment-id">
+            <div class="modal-body p-4">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label text-slate-500 fw-medium fs-8 mb-1 uppercase tracking-wider">Target Student Profile</label>
+                  <div class="form-control bg-slate-100/70 border border-slate-200 font-sans-semibold rounded-3 text-slate-600 fs-7.5" id="edit-payment-student-label" readonly>-</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-payment-amount" class="form-label text-slate-600 fw-medium fs-7.5">Payment Amount Price ($)</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white bg-slate-50 border-slate-200 text-slate-500">$</span>
+                    <input type="number" class="form-control rounded-3-end fs-7.5" id="edit-payment-amount" min="1" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="edit-payment-date" class="form-label text-slate-600 fw-medium fs-7.5">Payment Statement Date</label>
+                  <input type="date" class="form-control rounded-3" id="edit-payment-date" required>
+                </div>
+                <div class="col-12">
+                  <label for="edit-payment-status" class="form-label text-slate-600 fw-medium fs-7.5">Settlement Status Action</label>
+                  <select class="form-select rounded-3 text-slate-700" id="edit-payment-status" required>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bg-slate-50 border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary fs-7.5 px-3.5" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary bg-[#2563eb] border-0 fs-7.5 px-4 font-sans-medium">Update Transaction</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 CDN JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Unified app script -->
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>
